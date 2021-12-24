@@ -22,7 +22,7 @@ export function App() {
         {id: v1(), title: "ReactJS", isDone: false},
         {id: v1(), title: "Rest API", isDone: false},
         {id: v1(), title: "GraphQL", isDone: false},
-    ]);
+    ])
 
     let [filter, setFilter] = useState<fiteredType>('all')
     let tasksForTodolist = tasks;
