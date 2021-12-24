@@ -1,26 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import {v1} from "uuid";
+import {Todolist} from "./Todolists";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export type fiteredType = "all" | "active" | "completed"
+
+
+export type tasksType = {
+    id: string
+    title: string
+    isDone: boolean
 }
 
-export default App;
+export function App() {
+
+
+    let [tasks, setTasks] = useState([
+        {id: v1(), title: "HTML&CSS", isDone: true},
+        {id: v1(), title: "JS", isDone: true},
+        {id: v1(), title: "ReactJS", isDone: false},
+        {id: v1(), title: "Rest API", isDone: false},
+        {id: v1(), title: "GraphQL", isDone: false},
+    ]);
+
+    let [filter, setFilter] = useState<fiteredType>('all')
+    let tasksForTodolist = tasks;
+    if (filter === "active") {
+        tasksForTodolist = tasks.filter(f => !f.isDone)
+    }
+    if (filter === "completed") {
+        tasksForTodolist = tasks.filter(f => f.isDone)
+    }
+
+
+    const changeFilter = (value:fiteredType)=>{
+        setFilter(value)
+    }
+
+    const removeTask = (taskID: string) => {
+        let filteredTask = tasks.filter(f => f.id !== taskID)
+        setTasks(filteredTask)
+    }
+
+    const addTask = ()=>{
+        let newTask = {id:v1(),title:"New Task",isDone:false}
+        setTasks([newTask,...tasks])
+    }
+
+    return (
+        <div className="App">
+            <Todolist
+                name={"Todolist one"}
+                // key={id}
+                tasks={tasksForTodolist}
+                removeTask={removeTask}
+                changeFilter={changeFilter}
+                addTask={addTask}
+            />
+        </div>
+    );
+}
+
+
