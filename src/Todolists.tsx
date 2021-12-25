@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {fiteredType, tasksType} from "./App";
 import {Button} from "./components/Button";
 
@@ -7,7 +7,7 @@ type TodolistType = {
     name: string
     removeTask: (taskID: string) => void
     changeFilter: (value: fiteredType) => void
-    addTask:()=>void
+    addTask: (title: string) => void
 }
 
 export const Todolist = ({name, ...props}: TodolistType) => {
@@ -22,10 +22,19 @@ export const Todolist = ({name, ...props}: TodolistType) => {
     }
 
     const addTaskHandler = () => {
-      props.addTask()
+        props.addTask(title)
+        setTitle('')
     }
 
+    let [title, setTitle] = useState('')
 
+    const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setTitle(event.currentTarget.value)
+    }
+
+    const changeStatusHandler = () => {
+
+    }
 
     return (
         <div>
@@ -35,18 +44,22 @@ export const Todolist = ({name, ...props}: TodolistType) => {
                 }}/>
             </h3>
             <div>
-                <input/>
-               {/*<button>+</button>*/}
-                <Button name={"+"} callBack={()=>addTaskHandler()}/>
+                <input value={title}
+                       onChange={onChangeHandler}
+                />
+                {/*<button>+</button>*/}
+                <Button name={"+"} callBack={addTaskHandler}/>
+                {/*() => addTaskHandler(title)*/}
             </div>
             <ul>
                 {
-                    props.tasks.map(m =>
-                        <li key={m.id}>
-                            <input type="checkbox" checked={m.isDone}/>
+                    props.tasks.map(m => {
+                        return <li key={m.id}>
+                            <input onChange={changeStatusHandler} type="checkbox" checked={m.isDone}/>
                             <span>{m.title}</span>
                             <button onClick={() => RemoveTaskHandler(m.id)}>x</button>
-                        </li>)
+                        </li>
+                    })
                 }
             </ul>
             <div>
