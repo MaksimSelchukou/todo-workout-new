@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {fiteredType, tasksType} from "./App";
 import {Button} from "./components/Button";
 
@@ -8,6 +8,7 @@ type TodolistType = {
     removeTask: (taskID: string) => void
     changeFilter: (value: fiteredType) => void
     addTask: (title: string) => void
+    changeStatus:(taskID:string,newValue:boolean)=>void
 }
 
 export const Todolist = ({name, ...props}: TodolistType) => {
@@ -32,9 +33,18 @@ export const Todolist = ({name, ...props}: TodolistType) => {
         setTitle(event.currentTarget.value)
     }
 
-    const changeStatusHandler = () => {
-
+    const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            props.addTask(title)
+            setTitle('')
+        }
     }
+
+    const onChangeStatusHandler = (taskID:string,event:ChangeEvent<HTMLInputElement>) =>{
+        let newIsDoneValue = event.currentTarget.checked
+        props.changeStatus(taskID,newIsDoneValue)
+    }
+
 
     return (
         <div>
@@ -46,6 +56,7 @@ export const Todolist = ({name, ...props}: TodolistType) => {
             <div>
                 <input value={title}
                        onChange={onChangeHandler}
+                       onKeyPress={onKeyPressHandler}
                 />
                 {/*<button>+</button>*/}
                 <Button name={"+"} callBack={addTaskHandler}/>
@@ -55,7 +66,9 @@ export const Todolist = ({name, ...props}: TodolistType) => {
                 {
                     props.tasks.map(m => {
                         return <li key={m.id}>
-                            <input onChange={changeStatusHandler} type="checkbox" checked={m.isDone}/>
+                            <input
+                                onChange={(e)=>onChangeStatusHandler(m.id,e)}
+                                type="checkbox" checked={m.isDone}/>
                             <span>{m.title}</span>
                             <button onClick={() => RemoveTaskHandler(m.id)}>x</button>
                         </li>
