@@ -1,9 +1,12 @@
 .App {
-  text-align: center;
-  flex:content-box;
-  text-align: left;
+  padding: 30px;
+  display: flex;
 }
 
 li {
   list-style-type: none;
+}
+
+.App > div {
+  margin-right: 50px;
 }
